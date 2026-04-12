@@ -1,6 +1,6 @@
-# ensae-prog2A
+# mise-en-prod-3A
 ## Projet Python pour la Data Science
- Auteurs : *Thomas Chen, Félix de Champs, David Premachandra*  
+ Auteurs : *Thomas Chen, Félix de Champs, Clément Destouesse, Thomas Roussaux*  
 
 # Sujet :
 <div align="justify">
@@ -9,11 +9,42 @@ Depuis le 1er juin 2023, tous les jours à 17h, Météo France diffuse donc ce n
 La météo des forêts n’informe pas sur les incendies en cours ou à venir, c’est un outil d’information et de prévention destiné au public. Son objectif est d’indiquer les zones dans lesquelles les conditions météorologiques peuvent aggraver le risque de feux et de rappeler les bons réflexes pour éviter les départs de feux.  
 Nous nous sommes donc dit qu'il serait intéressant dans le cadre de ce projet de produire un outil de prévention se rapprochant de ce qui se fait dans le cadre de la météo des forêt. Ainsi, nous nous sommes fixé comme objectif d'étudier l'influence des paramètres climatiques sur la probabilité d'occurrence d’un incendie forestier. Essayer de prédire l'apparition d'un incendie dans la journée en fonction des paramètres météorologiques.
 
-# Problématique : 
-Est-il possible de prédire un feu de forêt grâce à des données climatiques ? Quelle est la pertinence d'un tel modèle ?  
+# Structure du projet : 
+```text
+mon_projet_ds/
+├── data/                   
+│   ├── raw/                <- Données brutes
+│   └── processed/          <- Données nettoyées
+├── models/                 <- Modèles entraînés (provisoire avant MLFlow)
+├── src/                    
+│   ├── data_prep.py        <- Pipeline de préparation
+│   ├── train.py            <- Entraînement
+│   └── predict.py          <- Script d'inférence (à venir)
+├── .gitignore              
+├── pyproject.toml          
+├── uv.lock                 
+└── README.md
+```
+## détail des scripts sources :
+- data_prep.py : télécharge les données météo, associe chaque commune à la station météo la plus proche, génère dataset_final.csv avec la variable cible incendie.
+- train.py : charge dataset_final.csv, entraîne 3 modèles (régression logistiquen, adaboost et xgboost), renvoie les métriques de performance et exporte les modèles.
 
-# Modèle utilisé : 
-Nous avons utilisé principalement la [**régression logistique**](https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=&cad=rja&uact=8&ved=2ahUKEwjQxOfE-raDAxVSTqQEHRVZAgAQFnoECBgQAQ&url=https%3A%2F%2Ffr.wikipedia.org%2Fwiki%2FR%25C3%25A9gression_logistique&usg=AOvVaw0pr6iR-aWOZYLMdamo873p&opi=89978449) qui permet d'estimer la probabilité de la variable cible (ici l'occurence ou non d'un feu de forêt) sachant les variables explicatives i.e ici principalement les variables météorologiques.  
+# Mise en route : 
+
+## prérequis : 
+Si vous n'avez pas encore `uv` installé sur votre machine :
+* Sur macOS / Linux : `curl -LsSf https://astral.sh/uv/install.sh | sh` ou `brew install uv`
+* Sur Windows : `powershell -c "irm https://astral.sh/uv/install.ps1 | iex"`
+
+## Cloner le projet
+```bash
+git clone https://github.com/felixdechamps/mise-en-prod-3A
+cd mise-en-prod-3A
+```
+## Installer l'environnement :
+```bash
+uv sync
+```
 
 # Données utilisées :
 - [BDIFF](https://bdiff.agriculture.gouv.fr/incendies) (Base de Données sur les Incendies de Forêts en France), base de données sur les feux de forêts en france de 2006 à 2022.  
