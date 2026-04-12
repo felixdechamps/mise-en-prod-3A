@@ -11,7 +11,7 @@ Nous nous sommes donc dit qu'il serait intéressant dans le cadre de ce projet d
 
 # Structure du projet : 
 ```text
-mon_projet_ds/
+mise-en-prod-3A/
 ├── data/                   
 │   ├── raw/                <- Données brutes
 │   └── processed/          <- Données nettoyées
