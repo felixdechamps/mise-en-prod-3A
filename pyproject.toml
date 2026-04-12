@@ -1,0 +1,14 @@
+[project]
+name = "mise-en-prod-3a"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "joblib>=1.5.3",
+    "numpy>=2.0.2",
+    "pandas>=2.3.3",
+    "requests>=2.32.5",
+    "scikit-learn>=1.6.1",
+    "xgboost>=2.1.4",
+]
