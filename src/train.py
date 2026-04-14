@@ -1,6 +1,7 @@
 import argparse
 import logging
 import os
+from dotenv import load_dotenv
 
 import joblib
 import pandas as pd
@@ -27,7 +28,7 @@ TARGET = "incendie"
 def load_and_split_data(data_path):
     """Charge les données, filtre les colonnes utiles et sépare en train/test."""
     logger.info("Chargement des données")
-    df = pd.read_csv(data_path)
+    df = pd.read_parquet(data_path)
 
     cols_to_keep = FEATURES + [TARGET]
     df_prediction = df[cols_to_keep].copy()
@@ -154,11 +155,15 @@ def main(data_path, models_dir):
 
 
 if __name__ == "__main__":
+
+    load_dotenv()
+    bucket = os.environ.get("MY_BUCKET")
+
     parser = argparse.ArgumentParser(description="Entraînement des modèles ML")
     parser.add_argument(
         "--data_path",
         type=str,
-        default="data/processed/dataset_final.csv",
+        default=f"s3://{bucket}/mise-en-prod/dataset_final.parquet",
         help="Chemin vers le fichier de données préparées",
     )
     parser.add_argument(

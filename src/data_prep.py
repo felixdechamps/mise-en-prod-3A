@@ -1,10 +1,10 @@
 import os
-import requests
-import tarfile
 import logging
 import pandas as pd
 import numpy as np
 import argparse
+from dotenv import load_dotenv
+import duckdb 
 
 # Configuration du logging
 logging.basicConfig(
@@ -12,47 +12,10 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-# Url fixe pour les données météo
-URL_METEO = (
-    "https://meteonet.umr-cnrm.fr/dataset/data/SE/ground_stations/"
-    "SE_ground_stations_2018.tar.gz"
-)
-
-# -----télécharger les données-----
-
-
-def download_and_extract_data(url, raw_dir):
-    """Télécharge et extrait les données (pour les données météo)"""
-    os.makedirs(raw_dir, exist_ok=True)
-    file_name = url.split("/")[-1]
-    file_path = os.path.join(raw_dir, file_name)
-
-    # Téléchargement
-    if not os.path.exists(file_path):
-        logger.info(f"Téléchargement des données depuis {url}...")
-        response = requests.get(url)
-        if response.status_code == 200:
-            with open(file_path, "wb") as file:
-                file.write(response.content)
-            logger.info("Téléchargement réussi.")
-        else:
-            logger.error(f"Échec : {response.status_code}")
-            return
-    else:
-        logger.info(f"Le fichier {file_path} existe déjà")
-
-    # Extraction
-    logger.info(f"Extraction de {file_path}...")
-    try:
-        with tarfile.open(file_path, "r:gz") as tar:
-            tar.extractall(path=raw_dir)
-        logger.info("Extraction terminée.")
-    except Exception as e:
-        logger.error(f"Erreur lors de l'extraction : {e}")
-
+load_dotenv()
+MY_BUCKET = os.environ.get("MY_BUCKET")
 
 # -----Préparation des données-----
-
 
 def prep_communes(filepath):
     """Charge et nettoie les données des communes."""
@@ -106,6 +69,44 @@ def prep_meteo(filepath):
 
     return df_meteo_moy, df_stations
 
+def prep_meteo_duckdb(s3_filepath):
+    """Agrège les données météo par jour"""
+    print("Préparation des données météo avec DuckDB...")
+    
+    con = duckdb.connect(database=':memory:')
+    
+    # 1. Agrégation avec AVG() partout et conservation des noms
+    query_moy = f"""
+        SELECT 
+            number_sta, 
+            CAST(strptime(date, '%Y%m%d %H:%M') AS DATE) as date,
+            FIRST(lat) as lat, 
+            FIRST(lon) as lon,
+            FIRST(height_sta) as height_sta,
+            AVG(t) as t,
+            AVG(hu) as hu,
+            AVG(ff) as ff,
+            SUM(precip) as precip,
+            AVG(td) as td,
+            AVG(psl) as psl,
+            AVG(dd) as dd
+        FROM read_parquet('{s3_filepath}')
+        GROUP BY number_sta, CAST(strptime(date, '%Y%m%d %H:%M') AS DATE)
+    """
+    df_meteo_agg = con.execute(query_moy).df()
+
+    # 2. Extraction du référentiel des stations
+    query_stations = f"""
+        SELECT DISTINCT 
+            number_sta, 
+            lat, 
+            lon,
+            height_sta
+        FROM read_parquet('{s3_filepath}')
+    """
+    df_stations = con.execute(query_stations).df()
+
+    return df_meteo_agg, df_stations
 
 def prep_incendies(filepath, year=2018):
     """Charge et nettoie les données d'incendies."""
@@ -122,7 +123,6 @@ def prep_incendies(filepath, year=2018):
 
 
 # -----Construction du dataframe final-----
-
 
 def haversine_distance(lat1, lon1, lat2, lon2):
     """Calcule la distance entre deux points GPS en km (vectorisé)."""
@@ -206,47 +206,62 @@ def build_final_dataset(df_communes, df_stations, df_meteo_moy, df_incendies):
     )
     df_final = df_final[
         df_final.columns[df_final.isna().sum() / df_final.shape[0] < 0.99]
-    ].drop(["lat", "lon", "lat_sta", "lon_sta", "height_sta", "number_sta"], axis=1)
+    ]#.drop(["lat", "lon", "lat_sta", "lon_sta", "height_sta", "number_sta"], axis=1)
 
     return df_final
 
 
 #-----main----
 
+def main(s3_raw_path, s3_processed_path):
+    """Pipeline orchestrant la préparation des données directement sur S3."""
+    
+    load_dotenv()
+    bucket = os.environ.get("MY_BUCKET")
+    
+    if not bucket:
+        raise ValueError("La variable MY_BUCKET n'est pas définie dans .env")
 
-def main(raw_dir, processed_dir):
-    """Fonction principale orchestrant le pipeline de préparation."""
-    # Création du dossier d'output s'il n'existe pas
-    os.makedirs(processed_dir, exist_ok=True)
+    # Construction des chemins complets S3
+    path_communes = f"{s3_raw_path}/communes.csv"
+    path_meteo = f"{s3_raw_path}/meteo_2018.parquet"
+    path_incendies = f"{s3_raw_path}/Incendies_18.csv"
 
-    download_and_extract_data(URL_METEO, raw_dir)
+    
+    #préparation
+    df_com = prep_communes(path_communes)
+    df_meteo_moy, df_sta = prep_meteo_duckdb(path_meteo)
+    df_inc = prep_incendies(path_incendies)
 
-    df_com = prep_communes(os.path.join(raw_dir, "communes.csv"))
-    df_meteo_moy, df_sta = prep_meteo(os.path.join(raw_dir, "SE2018.csv"))
-    df_inc = prep_incendies(os.path.join(raw_dir, "Incendies_18.csv"))
-
+    # Jointure
     df_final = build_final_dataset(df_com, df_sta, df_meteo_moy, df_inc)
 
-    # Sauvegarde dans data/processed
-    output_path = os.path.join(processed_dir, "dataset_final.csv")
-    df_final.to_csv(output_path, index=False)
-    print(f"Pipeline terminé. Données prêtes pour le ML dans : {output_path}")
+    #Exportation vers S3
+    output_path = f"{s3_processed_path}/dataset_final.parquet"
+    
+    print(f"Exportation du dataset final vers : {output_path}")
+    df_final.to_parquet(output_path, index=False)
+    
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Préparation données Incendies/Météo")
+    load_dotenv()
+    bucket = os.environ.get("MY_BUCKET")
+
+    parser = argparse.ArgumentParser(description="Pipeline Incendies")
+    
     parser.add_argument(
         "--raw_dir",
         type=str,
-        default="data/raw",
-        help="Dossier contenant les données brutes",
+        default=f"s3://{bucket}/mise-en-prod",
+        help="Chemin S3 vers les données brutes",
     )
     parser.add_argument(
         "--processed_dir",
         type=str,
-        default="data/processed",
-        help="Dossier où sauvegarder les données nettoyées",
+        default=f"s3://{bucket}/mise-en-prod",
+        help="Chemin S3 pour le dataset final",
     )
+    
     args = parser.parse_args()
-
     main(args.raw_dir, args.processed_dir)
