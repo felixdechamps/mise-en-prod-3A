@@ -40,7 +40,7 @@ jobs:
       - name: Run application / script
         env:
           JETON_API: ${{ secrets.JETON_API }}
-        run: uv run python train.py
+        run: uv run python src/train.py
 
       - name: Upload logs artifact
         uses: actions/upload-artifact@v4
