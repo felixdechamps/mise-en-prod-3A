@@ -35,11 +35,11 @@ jobs:
         run: uv sync --frozen
 
       - name: Run code quality checks (pylint)
-        run: uv run pylint src --fail-under=5
+        run: uv run pylint src --fail-under=7
 
       - name: Run application / script
         env:
-          JETON_API: ${{ secrets.JETON_API }}
+          MY_BUCKET: ${{ secrets.MY_BUCKET }}
         run: uv run python src/train.py
 
       - name: Upload logs artifact
