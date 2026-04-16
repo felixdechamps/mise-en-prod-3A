@@ -1,5 +1,4 @@
-# mise-en-prod-3A
-## Projet Python pour la Data Science
+# Projet de mise en production - ENSAE 3A
  Auteurs : *Thomas Chen, Félix de Champs, Clément Destouesse, Thomas Roussaux*  
 
 # Sujet :
@@ -27,7 +26,7 @@ mise-en-prod-3A/
 ```
 ## détail des scripts sources :
 - data_prep.py : télécharge les données météo, associe chaque commune à la station météo la plus proche, génère dataset_final.csv avec la variable cible incendie.
-- train.py : charge dataset_final.csv, entraîne 3 modèles (régression logistiquen, adaboost et xgboost), renvoie les métriques de performance et exporte les modèles.
+- train.py : charge dataset_final.csv, entraîne 3 modèles (régression logistique, AdaBoost et XGBoost), renvoie les métriques de performance et exporte les modèles.
 
 # Mise en route : 
 
@@ -54,10 +53,5 @@ uv sync
 
 - [Base de données Geojson des communes françaises](https://public.opendatasoft.com/explore/dataset/georef-france-commune/information/?disjunctive.reg_name&disjunctive.dep_name&disjunctive.arrdep_name&disjunctive.ze2020_name&disjunctive.bv2022_name&disjunctive.epci_name&disjunctive.ept_name&disjunctive.com_name&disjunctive.ze2010_name&disjunctive.com_is_mountain_area&sort=-com_name&refine.dep_name=Bouches-du-Rh%C3%B4ne) et sur les [régions françaises](https://france-geojson.gregoiredavid.fr/repo/regions.geojson) qui permettent de retracer sur un fond de carte les communes touchées par les incendies.
 
-# Navigation au sein du projet : 
-Il suffit d'exécuter successivement les cellules du notebook : [notebookincendie.ipynb](notebookincendies.ipynb)
-
-# Remarque sur la reproductibilité : 
-**Attention** à ce que le dossier **ensae-prog2A** ne soit pas dans le **work**, afin que les chemins utilisés pour accéder aux fichiers correspondent bien au code du notebook.
 
 Autres sources : [Ministère de l'écologie](https://www.ecologie.gouv.fr/feux-foret-en-france)
