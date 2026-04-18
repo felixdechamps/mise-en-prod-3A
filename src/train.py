@@ -28,7 +28,13 @@ TARGET = "incendie"
 def load_and_split_data(data_path):
     """Charge les données, filtre les colonnes utiles et sépare en train/test."""
     logger.info("Chargement des données")
-    df = pd.read_parquet(data_path)
+    df = pd.read_parquet(
+        data_path,
+        storage_options={
+            "client_kwargs": {'endpoint_url': 'https://minio.lab.sspcloud.fr'},
+            "anon": True
+        }
+    )
 
     cols_to_keep = FEATURES + [TARGET]
     df_prediction = df[cols_to_keep].copy()
