@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: incendies-deployment
+  labels:
+    app: incendies
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: incendies
+  template:
+    metadata:
+      labels:
+        app: incendies
+    spec:
+      containers:
+      - name: incendies
+        image: thomasroussaux/app-mise-en-prod:latest
+        ports:
+        - containerPort: 8000
+        env:
+        - name: JETON_API
+          valueFrom:
+            secretKeyRef:
+              name: api-jeton
+              key: JETON_API

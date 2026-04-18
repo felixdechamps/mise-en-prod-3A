@@ -1,0 +1,16 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: incendies-ingress
+spec:
+  rules:
+  - host: api-incendies-troussaux.lab.sspcloud.fr
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: incendies-service
+            port:
+              number: 8000
