@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - dev-docker
+      - fast-API
 
 jobs:
   docker:
