@@ -21,7 +21,6 @@ COPY pyproject.toml uv.lock ./
 RUN uv sync --frozen --no-install-project
 
 # Copie du reste du code source
-COPY main.py .
 COPY src ./src
 
 # Synchronisation finale pour inclure le projet actuel
@@ -29,4 +28,4 @@ RUN uv sync --frozen
 
 # Utilisation de l'environnement virtuel créé par uv
 ENV PATH="/app/.venv/bin:$PATH"
-CMD ["python3", "main.py"]
+CMD ["python3", "src/train.py"]
