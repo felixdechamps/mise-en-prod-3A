@@ -22,10 +22,12 @@ RUN uv sync --frozen --no-install-project
 
 # Copie du reste du code source
 COPY src ./src
+COPY app ./app
+
 
 # Synchronisation finale pour inclure le projet actuel
 RUN uv sync --frozen
 
 # Utilisation de l'environnement virtuel créé par uv
 ENV PATH="/app/.venv/bin:$PATH"
-CMD ["python3", "src/train.py"]
+CMD ["bash", "-c", "./app/run.sh"]
