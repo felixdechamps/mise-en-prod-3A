@@ -16,29 +16,15 @@ spec:
     spec:
       containers:
       - name: incendies
-        image: thomasroussaux/app-mise-en-prod:latest
+        image: thomasroussaux/app-mise-en-prod:FAST-API
         ports:
         - containerPort: 8000
         env:
-        - name: MY_BUCKET
-          value: "troussaux"
         - name: JETON_API
           valueFrom:
             secretKeyRef:
               name: api-jeton
               key: JETON_API
-        - name: AWS_ACCESS_KEY_ID
-          valueFrom:
-            secretKeyRef:
-              name: aws-creds
-              key: AWS_ACCESS_KEY_ID
-        - name: AWS_SECRET_ACCESS_KEY
-          valueFrom:
-            secretKeyRef:
-              name: aws-creds
-              key: AWS_SECRET_ACCESS_KEY
-        - name: AWS_SESSION_TOKEN
-          valueFrom:
-            secretKeyRef:
-              name: aws-creds
-              key: AWS_SESSION_TOKEN
+        envFrom:
+        - secretRef:
+            name: s3-credentials
