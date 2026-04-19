@@ -8,7 +8,11 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-app = FastAPI()
+app = FastAPI(
+    title="Démonstration du modèle de prédiction d'incendies",
+    description="<b>Application de prédiction d'incendies de forêt</b> 🔥<br>"
+                "Prédiction basée sur les conditions météo 🌡️"
+)
 
 # Configuration
 BUCKET = os.environ.get("MY_BUCKET")
