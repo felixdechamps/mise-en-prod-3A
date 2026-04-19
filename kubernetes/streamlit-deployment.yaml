@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: streamlit-deployment
+  labels:
+    app: streamlit-incendies
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: streamlit-incendies
+  template:
+    metadata:
+      labels:
+        app: streamlit-incendies
+    spec:
+      containers:
+      - name: streamlit
+        image: thomasroussaux/streamlit-incendies:fast-API
+        ports:
+        - containerPort: 8501
+        env:
+        - name: API_URL
+          value: "http://incendies-service:80"
+        - name: API_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: api-jeton
+              key: JETON_API
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "100m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
