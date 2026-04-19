@@ -33,7 +33,7 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/app-mise-en-prod:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/app-mise-en-prod:${{ github.ref_name }}
           # Utilisation du cache natif de GitHub Actions pour accélérer les builds suivants
           cache-from: type=gha
           cache-to: type=gha,mode=max
