@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: incendies
-        image: thomasroussaux/app-mise-en-prod:FAST-API
+        image: thomasroussaux/app-mise-en-prod:fast-API
         ports:
         - containerPort: 8000
         env:
