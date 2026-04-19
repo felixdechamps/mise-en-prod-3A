@@ -3,6 +3,7 @@ kind: Ingress
 metadata:
   name: incendies-ingress
 spec:
+  ingressClassName: nginx
   rules:
   - host: api-incendies-troussaux.lab.sspcloud.fr
     http:
@@ -13,4 +14,7 @@ spec:
           service:
             name: incendies-service
             port:
-              number: 8000
+              number: 80
+  tls:
+  - hosts:
+    - api-incendies-troussaux.lab.sspcloud.fr

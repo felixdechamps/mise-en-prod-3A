@@ -167,3 +167,4 @@ data/ms:PARC_PUBL_FR?format=GeoJSON&projection=WGS84
 
 .ruff_cache
 model.skops
+.env
