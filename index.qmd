@@ -1,0 +1,62 @@
+---
+title: "Prédiction des risques d'incendies de forêt"
+subtitle: "Un projet de mise en production de modèle ML"
+author: "Thomas Roussaux"
+date: today
+---
+
+## Présentation du projet
+
+Ce projet vise à prédire la survenue d'incendies de forêt à partir de conditions météorologiques, en utilisant un modèle **XGBoost**.
+
+L'ensemble du projet illustre une démarche **MLOps complète** : entraînement, conteneurisation, déploiement continu, et exposition via une API.
+
+## Architecture du projet
+
+Le projet est structuré autour de plusieurs briques modernes de MLOps :
+
+- **FastAPI** pour exposer le modèle sous forme d'API REST
+- **Docker** pour conteneuriser l'application
+- **GitHub Actions** pour le CI/CD
+- **Kubernetes** pour l'orchestration
+- **ArgoCD** pour le déploiement GitOps continu
+- **MinIO (S3)** pour le stockage du modèle
+
+## Accéder à l'API
+
+L'API est déployée et accessible publiquement :
+
+- **Endpoint racine** : [https://api-incendies-troussaux.lab.sspcloud.fr](https://api-incendies-troussaux.lab.sspcloud.fr)
+- **Documentation interactive (Swagger)** : [https://api-incendies-troussaux.lab.sspcloud.fr/docs](https://api-incendies-troussaux.lab.sspcloud.fr/docs)
+
+## Exemple d'utilisation
+
+Prédiction depuis la ligne de commande :
+
+```bash
+curl -X POST https://api-incendies-troussaux.lab.sspcloud.fr/predict \
+  -H "Content-Type: application/json" \
+  -H "x-token: mon_super_jeton" \
+  -d '{"dd": 180, "ff": 5, "t": 25, "td": 15, "precip": 0, "hu": 40}'
+```
+
+Réponse attendue :
+
+```json
+{"incendie": 0, "probabilite": 0.12}
+```
+
+## Variables d'entrée du modèle
+
+| Variable | Description | Unité |
+|----------|-------------|-------|
+| `dd`     | Direction du vent | degrés |
+| `ff`     | Vitesse du vent | m/s |
+| `t`      | Température | °C |
+| `td`     | Point de rosée | °C |
+| `precip` | Précipitations | mm |
+| `hu`     | Humidité | % |
+
+## Code source
+
+Le code source complet est disponible sur [GitHub](https://github.com/thomasroussaux/mise-en-prod-3A).
