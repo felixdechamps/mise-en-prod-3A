@@ -18,8 +18,11 @@ MODEL_LOCAL_PATH = "model.skops"
 
 # Télécharger le modèle depuis S3 au démarrage (si pas déjà en local)
 if not os.path.exists(MODEL_LOCAL_PATH):
+    endpoint = os.environ["AWS_S3_ENDPOINT"]
+    if not endpoint.startswith("http"):
+        endpoint = f"https://{endpoint}"
     fs = s3fs.S3FileSystem(
-        client_kwargs={"endpoint_url": "https://minio.lab.sspcloud.fr"}
+        client_kwargs={"endpoint_url": endpoint}
     )
     fs.get(MODEL_S3_PATH, MODEL_LOCAL_PATH)
 
