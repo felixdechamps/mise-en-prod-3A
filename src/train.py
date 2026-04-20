@@ -410,7 +410,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--logreg_c_values",
         type=parse_float_list,
-        default=[0.1, 1.0],
+        default=[0.1],
         help="Valeurs de C pour Logistic Regression (ex: 0.1,1,10)",
     )
     parser.add_argument(
@@ -423,38 +423,38 @@ if __name__ == "__main__":
     parser.add_argument(
         "--adaboost_n_estimators_values",
         type=parse_int_list,
-        default=[10, 50],
+        default=[10],
         help="Valeurs de n_estimators pour AdaBoost (ex: 10,50)",
     )
     parser.add_argument(
         "--adaboost_learning_rate_values",
         type=parse_float_list,
-        default=[0.01, 0.05, 0.1],
+        default=[0.1],
         help="Valeurs de learning_rate pour AdaBoost (ex: 0.05,0.1,0.2)",
     )
     parser.add_argument(
         "--adaboost_tree_depth_values",
         type=parse_int_list,
-        default=[3, 4],
+        default=[4],
         help="Valeurs de profondeur d'arbre pour AdaBoost (ex: 2,3,4)",
     )
 
     parser.add_argument(
         "--xgb_n_estimators_values",
         type=parse_int_list,
-        default=[100, 200],
+        default=[100],
         help="Valeurs de n_estimators pour XGBoost (ex: 100,200)",
     )
     parser.add_argument(
         "--xgb_learning_rate_values",
         type=parse_float_list,
-        default=[0.05, 0.1],
+        default=[0.1],
         help="Valeurs de learning_rate pour XGBoost (ex: 0.05,0.1)",
     )
     parser.add_argument(
         "--xgb_max_depth_values",
         type=parse_int_list,
-        default=[4, 6, 8],
+        default=[6],
         help="Valeurs de max_depth pour XGBoost (ex: 4,6,8)",
     )
 
