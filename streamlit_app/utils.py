@@ -161,8 +161,8 @@ def render_sidebar():
         
         st.markdown("### 🔗 Ressources")
         st.markdown(f"- [📖 API Docs]({API_URL}/docs)")
-        st.markdown("- [💻 Code source](https://github.com/)")
-        st.markdown("- [📊 Site projet](https://thomasroussaux.github.io/)")
+        st.markdown("- [💻 Code source](https://github.com/felixdechamps/mise-en-prod-3A.git)")
+        st.markdown("- [📊 Site projet](https://api-incendies-troussaux.lab.sspcloud.fr)")
         
         st.divider()
         

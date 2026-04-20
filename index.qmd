@@ -59,4 +59,4 @@ Réponse attendue :
 
 ## Code source
 
-Le code source complet est disponible sur [GitHub](https://github.com/thomasroussaux/mise-en-prod-3A).
+Le code source complet est disponible sur [GitHub](https://github.com/felixdechamps/mise-en-prod-3A).
