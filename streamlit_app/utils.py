@@ -350,16 +350,7 @@ def render_sidebar():
                 '<div class="status-pill"><span class="status-dot ko"></span>API injoignable</div>',
                 unsafe_allow_html=True,
             )
-
-        # Ressources
-        st.markdown('<div class="sidebar-label">Ressources</div>', unsafe_allow_html=True)
-        st.markdown(f"""
-        <a class="sidebar-link" href="{API_URL}/docs" target="_blank">Documentation API</a>
-        <a class="sidebar-link" href="https://github.com/" target="_blank">Code source</a>
-        <a class="sidebar-link" href="https://thomasroussaux.github.io/" target="_blank">Site du projet</a>
-        <a class="sidebar-link" href="https://open-meteo.com" target="_blank">Source météo</a>
-        """, unsafe_allow_html=True)
-
+            
         # Footer
         st.markdown(
             '<div class="sidebar-footer" style="margin-top:2rem;">Projet MLOps — ENSAE 3A</div>',
