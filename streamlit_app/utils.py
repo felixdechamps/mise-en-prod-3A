@@ -159,12 +159,12 @@ def render_sidebar():
         
         st.divider()
         
-        st.markdown("### 🔗 Ressources")
-        st.markdown(f"- [📖 API Docs]({API_URL}/docs)")
-        st.markdown("- [💻 Code source](https://github.com/)")
-        st.markdown("- [📊 Site projet](https://thomasroussaux.github.io/)")
+        st.markdown("### Ressources")
+        st.markdown("- [API Docs](https://api-incendies-troussaux.lab.sspcloud.fr/docs)")
+        st.markdown("- [Code source](https://github.com/felixdechamps/mise-en-prod-3A)")
+        st.markdown("- [Site projet](https://felixdechamps.github.io/mise-en-prod-3A/)")
         
         st.divider()
         
-        st.caption("🎓 Projet MLOps - ENSAE 3A")
+        st.caption("Projet MLOps - ENSAE 3A")
         st.caption("Météo : [Open-Meteo](https://open-meteo.com)")
