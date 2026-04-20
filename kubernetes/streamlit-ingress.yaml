@@ -1,0 +1,20 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: streamlit-ingress
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: streamlit-incendies-troussaux.lab.sspcloud.fr
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: streamlit-service
+            port:
+              number: 80
+  tls:
+  - hosts:
+    - streamlit-incendies-troussaux.lab.sspcloud.fr

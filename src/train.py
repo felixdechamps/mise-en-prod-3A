@@ -4,6 +4,7 @@ import os
 from dotenv import load_dotenv
 
 import joblib
+import skops.io as sio
 import pandas as pd
 from sklearn.ensemble import AdaBoostClassifier
 from sklearn.linear_model import LogisticRegression
@@ -128,6 +129,12 @@ def save_model(model, models_dir, filename):
     filepath = os.path.join(models_dir, filename)
     joblib.dump(model, filepath)
     logger.info("Modèle sauvegardé : %s", filepath)
+    
+
+def save_model_skops(model, filepath):
+    sio.dump(model, filepath)
+    logger.info("Modèle de production sauvegardé : %s", filepath)
+
 
 
 def main(data_path, models_dir):
@@ -156,6 +163,7 @@ def main(data_path, models_dir):
     xgboost_model.fit(x_train, y_train)
     evaluate_model(xgboost_model, x_test, y_test, "XGBoost")
     save_model(xgboost_model, models_dir, "xgboost.joblib")
+    save_model_skops(xgboost_model, "model.skops")
 
     logger.info("Pipeline d'entraînement terminé avec succès.")
 

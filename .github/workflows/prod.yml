@@ -1,4 +1,4 @@
-name: Docker CI 
+name: Docker CI
 
 on:
   push:
@@ -6,33 +6,62 @@ on:
       - main
       - dev-docker
       - fast-API
+    tags:
+      - 'v*'
 
 jobs:
-  docker:
+  # Job 1 : build de l'image API (comme avant)
+  docker-api:
     runs-on: ubuntu-latest
     steps:
-      # Indispensable : récupère le code du dépôt
       - name: Checkout repository
         uses: actions/checkout@v4
-        
+
       - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-          
+
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
-        
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
-        
-      - name: Build and push
+
+      - name: Build and push API
         uses: docker/build-push-action@v5
         with:
           context: .
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/app-mise-en-prod:latest
-          # Utilisation du cache natif de GitHub Actions pour accélérer les builds suivants
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/app-mise-en-prod:${{ github.ref_name }}
+          cache-from: type=gha,scope=api
+          cache-to: type=gha,mode=max,scope=api
+
+  # Job 2 : build de l'image Streamlit (nouveau)
+  docker-streamlit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and push Streamlit
+        uses: docker/build-push-action@v5
+        with:
+          context: ./streamlit_app
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/streamlit-incendies:${{ github.ref_name }}
+          cache-from: type=gha,scope=streamlit
+          cache-to: type=gha,mode=max,scope=streamlit

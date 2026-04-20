@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: incendies-service
+  labels:
+    app: incendies
+spec:
+  selector:
+    app: incendies
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8000
