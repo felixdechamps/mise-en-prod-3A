@@ -1,6 +1,6 @@
 # MLFlow
 mlruns/
-models/*
+models/
 *.joblib
 
 # Byte-compiled / optimized / DLL files

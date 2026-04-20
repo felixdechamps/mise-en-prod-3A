@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: incendies
-        image: thomasroussaux/app-mise-en-prod:v0.0.1
+        image: thomasroussaux/app-mise-en-prod:v0.0.2
         ports:
         - containerPort: 8000
         env:
@@ -25,6 +25,19 @@ spec:
             secretKeyRef:
               name: api-jeton
               key: JETON_API
+        - name: MLFLOW_TRACKING_URI
+          value: "https://user-cdestouesse-mlflow.user.lab.sspcloud.fr"
+        - name: MLFLOW_TRACKING_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: mlflow-secrets
+              key: MLFLOW_TRACKING_USERNAME
+        - name: MLFLOW_TRACKING_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mlflow-secrets
+              key: MLFLOW_TRACKING_PASSWORD
         envFrom:
         - secretRef:
+        
             name: s3-credentials

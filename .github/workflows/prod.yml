@@ -6,6 +6,7 @@ on:
       - main
       - dev-docker
       - fast-API
+      - mlflow
     tags:
       - 'v*'
 
