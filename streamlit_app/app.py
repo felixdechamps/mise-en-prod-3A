@@ -3,7 +3,7 @@ import streamlit as st
 from utils import inject_custom_css, render_sidebar, VILLES
 
 st.set_page_config(
-    page_title="Fire Risk",
+    page_title="Risque incendies",
     page_icon="🔥",
     layout="wide",
     initial_sidebar_state="expanded",
