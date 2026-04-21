@@ -350,7 +350,7 @@ def render_sidebar():
 
         st.markdown('<div class="sidebar-label">Ressources</div>', unsafe_allow_html=True)
         st.markdown(f"""
-        <a class="sidebar-link" href="https://api-incendies-troussaux.lab.sspcloud.fr/docs" target="_blank">Documentation API</a>
+        <a class="sidebar-link" href="https://felixdechamps.github.io/mise-en-prod-3A/" target="_blank">Documentation API</a>
         <a class="sidebar-link" href="https://open-meteo.com" target="_blank">Source météo</a>
         """, unsafe_allow_html=True)
 
