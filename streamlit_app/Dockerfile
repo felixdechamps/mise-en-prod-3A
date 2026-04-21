@@ -14,7 +14,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Code de l'app
 COPY .streamlit/ .streamlit/
 COPY utils.py .
-COPY app.py .
+COPY Accueil.py .
 COPY pages/ pages/
 
 EXPOSE 8501
@@ -22,7 +22,7 @@ EXPOSE 8501
 HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
     CMD curl --fail http://localhost:8501/_stcore/health || exit 1
 
-CMD ["streamlit", "run", "app.py", \
+CMD ["streamlit", "run", "Accueil.py", \
      "--server.address=0.0.0.0", \
      "--server.port=8501", \
      "--server.headless=true"]
